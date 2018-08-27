@@ -8,6 +8,7 @@ contract Authorship {
     struct Claim {
         bool exists;
         uint timestamp;
+        address submitter;
         string name;
     }
 
@@ -25,7 +26,8 @@ contract Authorship {
     uint ALLOWED_MARGIN_LATE_S = 30;
 
     event Claimed(
-        uint indexed fileHash, uint indexed timestamp, string indexed name);
+        uint indexed fileHash, uint indexed timestamp,
+        address indexed submitter, string name);
 
     /**
      * Submit a claim for a new file.
@@ -42,25 +44,22 @@ contract Authorship {
         //
         // Design decision: Use the user-submitted timestamp. This simplifies
         // things for now.
-        claims[_fileHash] = Claim(true, _timestamp, _name);
+        claims[_fileHash] = Claim(true, _timestamp, msg.sender, _name);
         claimCount++;
-        emit Claimed(_fileHash, _timestamp, _name);
-    }
-
-    function makeClaim(uint _fileHash, uint _timestamp) external {
-        this.makeClaim(_fileHash, _timestamp, "");
+        emit Claimed(_fileHash, _timestamp, msg.sender, _name);
     }
 
     /**
      * Check that a claim exists. Must be an exact match.
      */
-    function verifyClaim(uint _fileHash, uint _timestamp, string _name)
+    function verifyClaim(
+        uint _fileHash, uint _timestamp, address _address, string _name)
     public view
     returns(bool) {
         Claim storage claim = claims[_fileHash];
         return (
             claim.exists && claim.timestamp == _timestamp &&
-            stringsEqual(claim.name, _name));
+            claim.submitter == _address && stringsEqual(claim.name, _name));
     }
 
     function validTimestamp(uint _userTimestamp) private view returns(bool) {
