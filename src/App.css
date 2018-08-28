@@ -1,4 +1,4 @@
-/* PAGE */
+/* Page */
 
 code {
   display: block;
@@ -25,12 +25,12 @@ code {
   border-color: #0c1a2b;
 }
 
-/* NAVBAR */
+/* Navbar */
 
 .navbar {
   position: fixed;
   padding: 5px;
-  background: #0c1a2b;
+  background: #E38045;
 }
 
 .navbar a {
@@ -40,7 +40,7 @@ code {
 .navbar a:active,
 .navbar a:focus,
 .navbar a:hover {
-  background: #233e5e;
+  background: #CF733E;
 }
 
 .navbar .pure-menu-heading {
@@ -55,4 +55,59 @@ code {
 .navbar .uport-logo {
   height: 16px;
   margin-right: 10px;
+}
+
+/* Forms */
+
+.form-row {
+  display: flex;
+  align-items: baseline;
+  height: 36px;
+}
+
+label {
+  display: inline-block;
+  width: 160px;
+  min-width: 160px;
+  font-size: 13px;
+}
+
+input {
+  flex: initial;
+  min-width: 100px;
+  margin-right: 10px;
+}
+
+button {
+  background: #fff;
+  border-radius: 3px;
+  padding: 6px;
+  width: 100px;
+  margin-right: 10px;
+}
+
+button:hover {
+  background: #eee;
+}
+
+button:focus {
+  outline: none;
+}
+
+.status-pass {
+  color: green;
+}
+
+.status-fail {
+  color: orange;
+}
+
+.status-error {
+  color: red;
+}
+
+/* Misc */
+
+.small-text {
+  font-size: 13px;
 }

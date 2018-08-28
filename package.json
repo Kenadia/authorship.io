@@ -18,6 +18,8 @@
     "extends": "react-app"
   },
   "dependencies": {
+    "bs58": "^4.0.1",
+    "crypto": "^1.0.1",
     "dotenv": "^2.0.0",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
