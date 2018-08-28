@@ -21,12 +21,13 @@ class App extends Component {
       wrongNetwork: false,
 
       // Form fields.
+      submitFormFileHash: '',
+      submitFormName: '',
       verifyFormFileHash: '',
       verifyFormTimestamp: '',
       verifyFormAddress: '',
       verifyFormName: '',
-      submitFormFileHash: '',
-      submitFormName: '',
+      lookUpFormFileHash: '',
 
       // Tasks.
       submitInProgress: false,
@@ -40,16 +41,19 @@ class App extends Component {
       lookUpResult: null,
     }
 
+    this.updateSubmitFileHash = this.updateSubmitFileHash.bind(this)
+    this.updateSubmitName = this.updateSubmitName.bind(this)
     this.updateVerifyFileHash = this.updateVerifyFileHash.bind(this)
     this.updateVerifyTimestamp = this.updateVerifyTimestamp.bind(this)
     this.updateVerifyAddress = this.updateVerifyAddress.bind(this)
     this.updateVerifyName = this.updateVerifyName.bind(this)
-    this.updateSubmitFileHash = this.updateSubmitFileHash.bind(this)
-    this.updateSubmitName = this.updateSubmitName.bind(this)
+    this.updateLookUpFileHash = this.updateLookUpFileHash.bind(this)
     this.calculateSubmitFormFileHash =
         this.calculateSubmitFormFileHash.bind(this)
     this.calculateVerifyFormFileHash =
         this.calculateVerifyFormFileHash.bind(this)
+    this.calculateLookUpFormFileHash =
+        this.calculateLookUpFormFileHash.bind(this)
     this.submit = this.submit.bind(this)
     this.verify = this.verify.bind(this)
     this.lookUp = this.lookUp.bind(this)
@@ -66,7 +70,7 @@ class App extends Component {
       // In production, display an error if the selected network is not Rinkeby.
       if (process.env.NODE_ENV === 'production') {
         results.web3.version.getNetwork((err, res) => {
-          if (res !== 4) {
+          if (res !== '4') {
             this.setState({
               wrongNetwork: true,
             })
@@ -125,7 +129,6 @@ class App extends Component {
       })
       return
     }
-    console.log('submitFormName', submitFormName)
 
     this.setState({
       submitInProgress: true,
@@ -177,13 +180,13 @@ class App extends Component {
   }
 
   lookUp() {
-    const { verifyFormFileHash } = this.state
+    const { lookUpFormFileHash } = this.state
     this.setState({
       lookUpInProgress: true,
       lookUpHasError: false,
       lookUpResult: null,
     })
-    this.state.contract.claims.call(ipfsHashToUint(verifyFormFileHash))
+    this.state.contract.claims.call(ipfsHashToUint(lookUpFormFileHash))
     .then((result) => {
       this.setState({
         lookUpInProgress: false,
@@ -205,6 +208,18 @@ class App extends Component {
   /**
    * Forms.
    */
+
+  updateSubmitFileHash(e) {
+    this.setState({
+      submitFormFileHash: e.target.value,
+    })
+  }
+
+  updateSubmitName(e) {
+    this.setState({
+      submitFormName: e.target.value,
+    })
+  }
 
   updateVerifyFileHash(e) {
     this.setState({
@@ -230,15 +245,9 @@ class App extends Component {
     })
   }
 
-  updateSubmitFileHash(e) {
+  updateLookUpFileHash(e) {
     this.setState({
-      submitFormFileHash: e.target.value,
-    })
-  }
-
-  updateSubmitName(e) {
-    this.setState({
-      submitFormName: e.target.value,
+      lookUpFormFileHash: e.target.value,
     })
   }
 
@@ -254,6 +263,14 @@ class App extends Component {
     this.calculateHash(e, (hash) => {
       this.setState({
         verifyFormFileHash: hash,
+      })
+    })
+  }
+
+  calculateLookUpFormFileHash(e) {
+    this.calculateHash(e, (hash) => {
+      this.setState({
+        lookUpFormFileHash: hash,
         lookUpResult: null,
       })
     })
@@ -426,19 +443,20 @@ class App extends Component {
                     <span className="status-error">An error occurred.</span>
                   }
 
+                  <h2>Look Up Claim</h2>
                   <p>Alternatively, you can submit a file hash to look up the
                   existing claim details.</p>
                   <div className="form-row">
-                    <label htmlFor="verify-file-hash-2">File hash:</label>
+                    <label htmlFor="look-up-file-hash">File hash:</label>
                     <input
                       type="text"
-                      id="verify-file-hash-2"
-                      value={this.state.verifyFormFileHash}
-                      onChange={this.updateVerifyFileHash}
+                      id="look-up-file-hash"
+                      value={this.state.lookUpFormFileHash}
+                      onChange={this.updateLookUpFileHash}
                     />
                     <input
                       type="file"
-                      onChange={this.calculateVerifyFormFileHash}
+                      onChange={this.calculateLookUpFormFileHash}
                     />
                   </div>
                   {this.state.lookUpResult !== null && this.state.lookUpResult.exists &&
