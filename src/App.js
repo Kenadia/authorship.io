@@ -13,11 +13,12 @@ class App extends Component {
     super(props)
 
     this.state = {
-      claimCount: '<CONTRACT NOT DEPLOYED>',
+      claimCount: null,
       contract: null,
       localWeb3: null,
-      web3: null,
       userAddress: null,
+      web3: null,
+      wrongNetwork: false,
 
       // Form fields.
       verifyFormFileHash: '',
@@ -61,6 +62,17 @@ class App extends Component {
     getWeb3
     .then(results => {
       this.setState({ web3: results.web3, localWeb3: results.local })
+
+      // In production, display an error if the selected network is not Rinkeby.
+      if (process.env.NODE_ENV === 'production') {
+        results.web3.version.getNetwork((err, res) => {
+          if (res !== 4) {
+            this.setState({
+              wrongNetwork: true,
+            })
+          }
+        })
+      }
 
       // Instantiate contract once web3 provided.
       this.instantiateContract()
@@ -278,9 +290,16 @@ class App extends Component {
               <p>This is a simple app for interacting with the Authorship.io
               smart contract.</p>
 
-              {this.state.web3 &&
+              {this.state.web3 && !this.state.wrongNetwork &&
                 <div>
-                  <p>The number of existing claims is: {this.state.claimCount}</p>
+                  <p>The number of existing claims is:
+                    {this.state.claimCount === null &&
+                      <span>&nbsp;&lt;CONTRACT NOT DEPLOYED&gt;</span>
+                    }
+                    {this.state.claimCount !== null &&
+                      <span>{this.state.claimCount}</span>
+                    }
+                  </p>
                   {this.state.localWeb3 &&
                     <p className="status-fail">
                       Warning: Could not find injected web3, so falling back to
@@ -453,6 +472,11 @@ class App extends Component {
                   }
 
                 </div>
+              }
+
+              {this.state.web3 && this.state.wrongNetwork &&
+                <p>Please connect to the Rinkeby test network in order to use
+                this app.</p>
               }
 
               {!this.state.web3 &&
