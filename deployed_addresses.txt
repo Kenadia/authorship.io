@@ -1,0 +1,7 @@
+The Authorship contract is deployed to the Rinkeby testnet at the following address:
+
+0x384EFB3277b51b3453d0172D0dCb9128a55DDd43
+
+It can be visited on Etherscan at the following URL:
+
+https://rinkeby.etherscan.io/address/0x384efb3277b51b3453d0172d0dcb9128a55ddd43
