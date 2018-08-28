@@ -7,8 +7,9 @@ The contract is currently deployed on the Rinkeby test network at address
 
 You can interact with the contract using the web app at [authorship.io](https://authorship.io).
 
-This project was created as part of the ConsenSys Academy 2018 Developer
-Program.
+This project was created as part of the ConsenSys Academy [2018 Developer
+Program](https://consensys.net/academy/2018developer/). See `avoiding_common_attacks.md` and `design_pattern_desicions.md`
+for additional notes about the smart contract development process.
 
 ## Introduction
 
