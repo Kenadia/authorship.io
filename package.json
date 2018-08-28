@@ -2,7 +2,7 @@
   "name": "authorship.io",
   "version": "0.1.0",
   "description": "Blockchain-backed timestamping for everyone.",
-  "main": "index.js",
+  "homepage": "http://authorship.io",
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
