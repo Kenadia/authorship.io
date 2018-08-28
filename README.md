@@ -40,7 +40,7 @@ npm install
 
 Start a local blockchain instance by running `ganache-cli` in a tab.
 With Ganache running, compile and deploy the Authorship contract with
-`trufle compile && truffle migrate`.
+`truffle compile && truffle migrate`.
 Run tests using `truffle test`.
 
 With the contract deployed, you can run the development server for the web app
