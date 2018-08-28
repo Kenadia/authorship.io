@@ -13,7 +13,7 @@ class App extends Component {
     super(props)
 
     this.state = {
-      claimCount: '<CONTRACT NOT FOUND>',
+      claimCount: '<CONTRACT NOT DEPLOYED>',
       contract: null,
       localWeb3: null,
       web3: null,
