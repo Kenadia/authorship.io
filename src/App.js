@@ -292,9 +292,9 @@ class App extends Component {
 
               {this.state.web3 && !this.state.wrongNetwork &&
                 <div>
-                  <p>The number of existing claims is:
+                  <p>The number of existing claims is:&nbsp;
                     {this.state.claimCount === null &&
-                      <span>&nbsp;&lt;CONTRACT NOT DEPLOYED&gt;</span>
+                      <span>&lt;CONTRACT NOT DEPLOYED&gt;</span>
                     }
                     {this.state.claimCount !== null &&
                       <span>{this.state.claimCount}</span>
@@ -304,6 +304,12 @@ class App extends Component {
                     <p className="status-fail">
                       Warning: Could not find injected web3, so falling back to
                       local web3 in read-only mode.
+                    </p>
+                  }
+
+                  {this.state.userAddress &&
+                    <p>
+                      You are logged in with address {this.state.userAddress}.
                     </p>
                   }
 
