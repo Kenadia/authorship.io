@@ -1,7 +1,8 @@
 pragma solidity ^0.4.21;
 
 /**
- * A simple implementation of digital timestamping.
+ * @title Simple implementation of decentralized trusted timestamping.
+ * @author Ken Schiller
  */
 contract Authorship {
 
@@ -25,12 +26,26 @@ contract Authorship {
     // https://consensys.github.io/smart-contract-best-practices/recommendations/#timestamp-dependence
     uint ALLOWED_MARGIN_LATE_S = 30;
 
+    /**
+     * @dev Emitted when a new claim is made.
+     */
     event Claimed(
         uint indexed fileHash, uint indexed timestamp,
         address indexed submitter, string name);
 
     /**
-     * Submit a claim for a new file.
+     * @dev Submit a claim for a new file.
+     * @param _fileHash IPFS hash of the file.
+     * @param _timestamp Unix Epoch time in seconds.
+     * @param _name An optional name associated with the claim.
+     *
+     * A claim consists of an IPFS hash and a timestamp. The address of the
+     * sender is included, and a name (arbitrary string) can be included as
+     * well.
+     *
+     * The smart contract is designed so that at most one claim can exists for
+     * any file. The first claim that is made will be the only one allowed.
+     * This design decision may be revisited later.
      */
     function makeClaim(uint _fileHash, uint _timestamp, string _name) external {
         // Require the timestamp to be accurate (within some threshold).
@@ -50,7 +65,16 @@ contract Authorship {
     }
 
     /**
-     * Check that a claim exists. Must be an exact match.
+     * @dev Submit information about an existing claim for verification.
+     * @param _fileHash IPFS hash of the file.
+     * @param _timestamp Unix Epoch time in seconds.
+     * @param _address Address of the claim creator.
+     * @param _name Name associated with the claim.
+     * @return isValid Boolean indicating whether the claim is valid.
+     *
+     * Trusted digital timestamps are useful to more people if they can be
+     * displayed publicly and easily verified. We provide a public function
+     * which verifies an existing claim. All parameters must match exactly.
      */
     function verifyClaim(
         uint _fileHash, uint _timestamp, address _address, string _name)
@@ -62,6 +86,25 @@ contract Authorship {
             claim.submitter == _address && stringsEqual(claim.name, _name));
     }
 
+    /**
+     * @dev Determine whether a user-submitted timestamp is within the
+     *   accepted bounds.
+     * @param _userTimestamp Unix Epoch time in seconds.
+     * @return isValid Boolean indicating whether the timestamp is valid.
+     *
+     * When creating a claim, the smart contract uses a timestamp supplied by
+     * the user. This simplifies things a bit for the user and client web app
+     * since the timestamp that will be used in the claim is known at the time
+     * that the transaction is first created.
+     *
+     * We have to verify that the user-supplied timestamp is very close to the
+     * miner's timestamp, to prevent the user from submitting entirely false
+     * timestamps.
+     *
+     * In the future the smart contract may use the miner's timestamp, which
+     * will help us to avoid any issues if a transaction takes a long time to be
+     * accepted.
+     */
     function validTimestamp(uint _userTimestamp) private view returns(bool) {
         // Calculate the offset relative to the miner's timestamp.
         uint minerTimestamp = block.timestamp;
@@ -76,7 +119,10 @@ contract Authorship {
     }
 
     /**
-     * Compare a string in storage with a string in memory.
+     * @dev Compare a string in storage with a string in memory.
+     * @param _a A string in storage.
+     * @param _b A string in memory.
+     * @return areEqual Boolean indicating whether the two strings are equal.
      *
      * Thanks to dave123124, https://forum.ethereum.org/discussion/3238/string-compare-in-solidity
      **/
