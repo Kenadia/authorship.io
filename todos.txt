@@ -1,0 +1,2 @@
+fallback function: revert to return funds
+take donations
